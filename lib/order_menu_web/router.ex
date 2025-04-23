@@ -16,6 +16,7 @@ defmodule OrderMenuWeb.Router do
 
   scope "/", OrderMenuWeb do
     pipe_through :browser
+    live "/", OrderMenuLive, :index
 
     get "/", PageController, :home
   end
@@ -36,6 +37,8 @@ defmodule OrderMenuWeb.Router do
 
     scope "/dev" do
       pipe_through :browser
+
+      live "/order_menu", OrderMenuLive
 
       live_dashboard "/dashboard", metrics: OrderMenuWeb.Telemetry
       forward "/mailbox", Plug.Swoosh.MailboxPreview
