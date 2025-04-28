@@ -30,8 +30,6 @@ defmodule OrderMenuWeb.OrderMenuLive do
     def render(assigns) do
       ~H"""
         <main>
-        <%= live_render(@socket, OrderMenuWeb.MenuComponent, id: "menu_component", items: @menu_items) %>
-        <%!-- <.live_component module={OrderMenuWeb.CartComponent} id="cart_component" /> --%>
       </main>
       """
     end
