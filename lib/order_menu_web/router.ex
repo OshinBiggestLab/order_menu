@@ -1,4 +1,5 @@
 defmodule OrderMenuWeb.Router do
+  alias OrderMenuWeb.MenuComponent
   use OrderMenuWeb, :router
 
   pipeline :browser do
@@ -17,6 +18,7 @@ defmodule OrderMenuWeb.Router do
   scope "/", OrderMenuWeb do
     pipe_through :browser
     live "/", OrderMenuLive, :index
+    live "/menu", MenuComponent, :index
 
     get "/", PageController, :home
   end
