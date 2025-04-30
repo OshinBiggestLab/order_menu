@@ -26,10 +26,35 @@ defmodule OrderMenuWeb.OrderMenuLive do
     end
 
 
-
     def render(assigns) do
       ~H"""
-        <main>
+        <main class="bg-[#FBF8F6] grid grid-cols-2 gap-8 py-[72px] px-[92px]">
+        <%!-- MENU LIST ⬇️ --%>
+        <section  class="">
+        <h1 class="font-bold mb-10">Desserts</h1>
+        <ul class="grid grid-cols-3 gap-x-4">
+        <%= for item <- @menu_items do %>
+        <li>
+        <img class="w-[200px] h-[200px] rounded-md" src={"#{item["image"]["desktop"]}"} alt={item["name"]} />
+        <span class="text-[#9C9591]"><%= item["category"]%></span>
+        <p class="font-bold"><%= item["name"]%></p>
+        <span class="text-[#c73a0f] font-bold">$<%= item["price"] %></span>
+        </li>
+        <% end %>
+        </ul>
+        </section>
+        <%!-- CART ⬇️ --%>
+        <section  class="bg-white rounded-lg max-w-[600px]">
+       <div>
+          <h1 class="text-[#c73a0f] font-bold">Your Cart <span>(7)</span></h1>
+          <ul></ul>
+          <div><span>Order Total</span><span class="font-bold">$46.50</span></div>
+        </div>
+      <button class="bg-[#c73a0f] text-white">Confirm Order</button>
+
+        </section>
+        <%!-- ORDER CONFIRMED ⬇️ --%>
+        <section  class="bg-white">OrderConfirmed</section>
       </main>
       """
     end
