@@ -12,7 +12,8 @@
   * CSS Library: [`TailwindCSS`](https://tailwindcss.com/)
 
 ## Notes
-  * State Naming: snake_case only. E.g. -> is_clicked 
+  * State Naming: `snake_case` only. E.g. ->  is_clicked
+  * "ERB tag" (Embedded Ruby tag): `<%= ... %>`
 
 ## README Default
 
