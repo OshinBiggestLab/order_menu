@@ -1,6 +1,16 @@
 # OrderMenu
 
-To start your Phoenix server:
+## Contents
+  * Main File :  `lib/order_menu_web/live/order_menu_live.ex`
+  * Data: `priv/static/data.json`
+  * UI Design: `about-project/design`
+
+## What I use + Document recommendations
+  * Language: [`Elixir`](https://hexdocs.pm/elixir/Kernel.html#content)
+  * Web Framework: [`Phoenix LiveView`](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html)
+  * CSS Library: [`TailwindCSS`](https://tailwindcss.com/)
+
+Run server:
 
   * Run `mix setup` to install and setup dependencies
   * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
