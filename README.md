@@ -11,6 +11,11 @@
   * Language: [`Elixir`](https://hexdocs.pm/elixir/Kernel.html#content)
   * CSS Library: [`TailwindCSS`](https://tailwindcss.com/)
 
+## Notes
+  * State Naming: snake_case only. E.g. -> is_clicked 
+
+## README Default
+
 Run server:
 
   * Run `mix setup` to install and setup dependencies
@@ -20,7 +25,7 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
 Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
 
-## Learn more
+Learn more:
 
   * Official website: https://www.phoenixframework.org/
   * Guides: https://hexdocs.pm/phoenix/overview.html
