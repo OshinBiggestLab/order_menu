@@ -6,8 +6,9 @@
   * UI Design: `about-project/design`
 
 ## What I use + Document recommendations
-  * Language: [`Elixir`](https://hexdocs.pm/elixir/Kernel.html#content)
+  * Web Design: [`Frontend Mentor`](https://www.frontendmentor.io/challenges/product-list-with-cart-5MmqLVAp_d)
   * Web Framework: [`Phoenix LiveView`](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html)
+  * Language: [`Elixir`](https://hexdocs.pm/elixir/Kernel.html#content)
   * CSS Library: [`TailwindCSS`](https://tailwindcss.com/)
 
 Run server:
