@@ -15,10 +15,10 @@
   * State Naming: `snake_case` only. E.g. ->  is_clicked
   * ERB tag (Embedded Ruby tag): `<%= ... %>`
   * handle_event/3
-        • We can have as many handle_event/3 functions as you need, there's no strict limit.
+        * We can have as many handle_event/3 functions as you need, there's no strict limit.
           ⚠️ BUT put specific ones first and catch-all patterns last to avoid conflicts—Elixir matches from top to bottom.
-        • Each one should match on a different event name (or different pattern).
-        • Elixir uses pattern matching, so when a LiveView receives an event,
+        * Each one should match on a different event name (or different pattern).
+        * Elixir uses pattern matching, so when a LiveView receives an event,
           it tries each handle_event/3 function until it finds one that matches the event name.
 
 
