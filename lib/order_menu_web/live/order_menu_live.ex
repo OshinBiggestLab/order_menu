@@ -10,7 +10,7 @@ defmodule OrderMenuWeb.OrderMenuLive do
         |> Jason.decode!()
         |> Enum.map(fn item -> Map.put(item, "count", 0) end)
         # IO.puts("DearJSON: #{inspect(menu_items)}")
-      {:ok, assign(socket, menu_items: menu_items, is_clicked: false, count_order: 0, orders: [], confirm_btn: false, total_price: 0)}
+      {:ok, assign(socket, menu_items: menu_items, is_clicked: false, count_order: 0, confirm_btn: false, total_price: 0)}
     end
 
     @spec handle_event(<<_::136>>, any(), any()) :: {:noreply, any()}
@@ -48,15 +48,12 @@ defmodule OrderMenuWeb.OrderMenuLive do
 
 
     def render(assigns) do
-
-      # orders = Enum.filter(assigns.menu_items, fn item -> item["count"] > 0 end)
-
-      # _total_price =
-      #   Enum.reduce(orders, 0, fn item, acc ->
-      #     acc + item["count"] * item["price"]
-      #   end)
-
       ~H"""
+
+      <% orders = Enum.filter(@menu_items, fn item -> item["count"] > 0 end) %>
+      <%= inspect(Enum.filter(@menu_items, fn item -> item["count"] > 0 end)) %>
+      <% total_price = Enum.reduce(orders, 0, fn item, acc -> acc + item["count"] * item["price"] end) %>
+
         <main class="bg-[#FBF8F6] grid grid-cols-2 gap-8 py-[72px] px-[92px]">
         <%!-- MENU LIST ⬇️ --%>
         <section  class="">
@@ -84,17 +81,21 @@ defmodule OrderMenuWeb.OrderMenuLive do
         <%!-- CART ⬇️ --%>
         <section  class="bg-white rounded-lg max-w-[600px] max-h-[400px]">
        <div>
-          <h1 class="text-[#c73a0f] font-bold">Your Cart <span>(<%= length(@orders)%>)</span></h1>
-          <%= if length(@orders) > 1 do %>
-          <ul>
-         <%= for order <- @orders do%>
+          <h1 class="text-[#c73a0f] font-bold">Your Cart <span>(<%= length(orders)%>)</span></h1>
+          <%= if length(orders) > 0 do %>
+          <ul >
+         <%= for order <- orders do%>
          <h1><%= order["name"] %></h1>
+         <p><%= order["count"] %>X</p>
+         <span>@ $<%= order["price"]%></span>
+         <span>$<%= order["count"] * order["price"] %></span>
+
          <% end %>
           </ul>
           <%end%>
-          <div><span>Order Total</span><span class="font-bold">$46.50</span></div>
+          <div><span>Order Total</span><span class="font-bold">$<%= total_price %></span></div>
         </div>
-     <button class="bg-[#c73a0f] text-white" phx-click="confirm_order">Confirm Order</button>
+           <button class="bg-[#c73a0f] text-white" phx-click="confirm_order">Confirm Order</button>
         </section>
         <%!-- ORDER CONFIRMED ⬇️ --%>
         <%= if @confirm_btn do %>
