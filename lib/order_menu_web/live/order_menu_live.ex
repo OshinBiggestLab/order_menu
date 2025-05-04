@@ -31,7 +31,6 @@ defmodule OrderMenuWeb.OrderMenuLive do
       # {:noreply, update(socket, :count_order, &(&1 + 1))}
     end
 
-    # ⬇️ 🟢   CURRENT TASK
     def handle_event("decrement", %{"index" => index_str}, socket) do
       index = String.to_integer(index_str)
 
@@ -100,7 +99,27 @@ defmodule OrderMenuWeb.OrderMenuLive do
         <%!-- ORDER CONFIRMED ⬇️ --%>
         <%= if @confirm_btn do %>
         <section  class="bg-white">
-        <h1>OrderConfirmed</h1>
+        <h1>Order Confirmed</h1>
+        <p>We hope you enjoy your food!</p>
+        <ul>
+        <%= for order <- orders do%>
+        <img src={"#{order["image"]["desktop"]}"} alt={order["name"]}/>
+        <div>
+          <p>order["name"]</p>
+          <div>
+           <span><%= order["count"]%>X</span>
+           <span>@ $<%= order["price"]%></span>
+           </div>
+        </div>
+        <span>$<%= order["count"] * order["price"] %></span>
+        <% end %>
+        </ul>
+
+        <div>
+          <span>Order Total</span>
+          <span>$<%= total_price %></span>
+        </div>
+        <button phx-click="confirm_order">Start New Order</button>
         </section>
         <%end%>
       </main>
