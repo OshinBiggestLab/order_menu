@@ -45,7 +45,6 @@ defmodule OrderMenuWeb.OrderMenuLive do
       {:noreply, assign(socket, confirm_btn: !socket.assigns.confirm_btn)}
     end
 
-
     def render(assigns) do
       ~H"""
       <% orders = Enum.filter(@menu_items, fn item -> item["count"] > 0 end) %>
@@ -57,20 +56,22 @@ defmodule OrderMenuWeb.OrderMenuLive do
         <h1 class="font-bold mb-10 text-5xl">Desserts</h1>
         <ul class="grid grid-cols-3 gap-x-4 w-[980px]">
         <%= for {item, index} <- Enum.with_index(@menu_items) do %>
-        <li class="flex flex-col">
-        <img class="w-[300px] h-[300px] rounded-md" src={"#{item["image"]["desktop"]}"} alt={item["name"]} />
+        <li class="flex flex-col justify-center items-center w-fit">
+        <img class="relative max-w-[300px] max-h-[300px] rounded-md" src={"#{item["image"]["desktop"]}"} alt={item["name"]} />
         <%= if @is_clicked do%>
-        <div class=" bg-[#c73a0f] px-6 text-white flex justify-between items-center border border-2 rounded-full max-w-[150px] py-1" phx-click="handle_is_clicked">
+        <div class="absolute mt-[120px] bg-[#c73a0f] px-6 text-white flex justify-between items-center rounded-full w-full max-w-[160px] h-11" phx-click="handle_is_clicked">
         <button class="border w-5 h-5 flex justify-center items-center rounded-full" phx-click="decrement"  phx-value-index={index}>-</button>
         <%= item["count"] %>
         <button class="border w-5 h-5 flex justify-center items-center rounded-full" phx-click="increment"  phx-value-index={index}>+</button>
         </div>
         <%else%>
-        <button class="bottom-0 bg-white border border-2 rounded-full max-w-[150px] py-1"  phx-click="handle_is_clicked">Add to Cart</button>
+        <button class="absolute mt-[120px] font-bold bg-white border border-[#9F9392] border-1 rounded-full w-full max-w-[160px] h-11 hover:text-[#c73a0f] hover:border-[#c73a0f]"  phx-click="handle_is_clicked">Add to Cart</button>
         <% end %>
-        <span class="text-[#9C9591]"><%= item["category"]%></span>
-        <p class="font-bold"><%= item["name"]%></p>
-        <span class="text-[#c73a0f] font-bold">$<%= item["price"] %></span>
+        <div class="my-10 flex flex-col gap-y-1 w-full">
+        <span class="text-[#9C9591] text-md"><%= item["category"]%></span>
+        <p class="text-xl"><%= item["name"]%></p>
+        <span class="text-[#c73a0f] text-xl">$<%= item["price"] %></span>
+        </div>
         </li>
         <% end %>
         </ul>
@@ -85,7 +86,7 @@ defmodule OrderMenuWeb.OrderMenuLive do
           <li class="border-b py-4">
             <h1 class="font-bold"><%= order["name"] %></h1>
             <div class="flex">
-            <p class="text-[#c73a0f]"><%= order["count"] %>X</p>
+            <p class="text-[#c73a0f]"><%= order["count"] %>x</p>
              <span>@ $<%= order["price"]%></span>
             <span>$<%= order["count"] * order["price"] %></span>
             </div>
@@ -104,28 +105,33 @@ defmodule OrderMenuWeb.OrderMenuLive do
         <%!-- ORDER CONFIRMED ⬇️ --%>
         <%= if @confirm_btn do %>
         <section class="absolute overflow-hidden top-0 left-0 bg-[hsla(13,1%,14%,0.5)] flex items-center justify-center w-screen h-screen">
-        <div class="bg-white p-10 rounded-xl">
-        <h1 class="text-5xl font-bold">Order Confirmed</h1>
-        <p class="text-[hsl(14, 24.50%, 72.00%)]">We hope you enjoy your food!</p>
-        <ul class="my-10">
+        <div class="bg-white max-w-[592px] w-full p-10 rounded-xl">
+        <h1 class="text-5xl font-bold mb-4">Order Confirmed</h1>
+        <p class="text-[#6e5c56] text-lg">We hope you enjoy your food!</p>
+        <div>
+        <ul class="my-10 px-6 pb-6 pt-3 rounded-md bg-[#FBF8F6] ">
         <%= for order <- orders do%>
+        <li class="flex items-center justify-between border-b border-[hsl(13, 31%, 94%)] py-4">
+        <div class="flex gap-x-4">
         <img class="w-14 h-14 rounded-md" src={"#{order["image"]["desktop"]}"} alt={order["name"]}/>
-        <div class="flex">
-          <p><%= order["name"]%></p>
+        <div class="flex flex-col">
+          <p class="font-bold"><%= order["name"]%></p>
           <div>
-           <span><%= order["count"]%>X</span>
+           <span class="text-[#c73a0f]"><%= order["count"]%>x</span>
            <span>@ $<%= order["price"]%></span>
            </div>
         </div>
-        <span>$<%= order["count"] * order["price"] %></span>
-        <% end %>
-        </ul>
-
-        <div>
-          <span>Order Total</span>
-          <span>$<%= total_price %></span>
         </div>
-        <button phx-click="confirm_order">Start New Order</button>
+        <span class="">$<%= order["count"] * order["price"] %></span>
+        </li>
+        <% end %>
+        <div class="mt-5 flex justify-between">
+          <span>Order Total</span>
+          <span class="font-bold text-2xl">$<%= total_price %></span>
+        </div>
+        </ul>
+          </div>
+        <button class="bg-[#c73a0f] hover:bg-[#8A341A]" phx-click="confirm_order">Start New Order</button>
         </div>
         </section>
         <%end%>
