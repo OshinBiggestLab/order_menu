@@ -11,6 +11,9 @@
   * Language: [`Elixir`](https://hexdocs.pm/elixir/Kernel.html#content)
   * CSS Library: [`TailwindCSS`](https://tailwindcss.com/)
 
+## Articles
+  * [`Import, Alias, Require, and Use in Elixir`](https://gabriel.perales.me/blog/import-alias-require-and-use)
+
 ## Notes
   * State Naming: `snake_case` only. E.g. ->  is_clicked
   * ERB tag (Embedded Ruby tag): `<%= ... %>`
