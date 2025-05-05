@@ -50,7 +50,7 @@ defmodule OrderMenuWeb.OrderMenuLive do
       <% orders = Enum.filter(@menu_items, fn item -> item["count"] > 0 end) %>
       <%!-- <%= inspect(Enum.filter(@menu_items, fn item -> item["count"] > 0 end)) %> --%>
       <% total_price = Enum.reduce(orders, 0, fn item, acc -> acc + item["count"] * item["price"] end) %>
-        <main class="bg-[#FBF8F6] flex gap-8 py-[86px] px-[114px]">
+        <main class="font-redhat bg-[#FBF8F6] flex gap-8 py-[86px] px-[114px]">
         <%!-- MENU LIST ⬇️ --%>
         <section  class="">
         <h1 class="font-bold mb-10 text-5xl">Desserts</h1>
@@ -65,7 +65,7 @@ defmodule OrderMenuWeb.OrderMenuLive do
         <button class="border w-5 h-5 flex justify-center items-center rounded-full" phx-click="increment"  phx-value-index={index}>+</button>
         </div>
         <%else%>
-        <button class="absolute mt-[120px] font-bold bg-white border border-[#9F9392] border-1 rounded-full w-full max-w-[160px] h-11 hover:text-[#c73a0f] hover:border-[#c73a0f] hover:bg-[hsl(20, 50%, 98%)]"  phx-click="handle_is_clicked">Add to Cart</button>
+        <button class="absolute mt-[120px] font-semibold bg-white border border-[#9F9392] border-1 rounded-full w-full max-w-[160px] h-11 hover:text-[#c73a0f] hover:border-[#c73a0f] hover:bg-[hsl(20, 50%, 98%)]"  phx-click="handle_is_clicked">Add to Cart</button>
         <% end %>
         <div class="my-10 flex flex-col gap-y-1 w-full">
         <span class="text-[#9C9591] text-md"><%= item["category"]%></span>
@@ -86,7 +86,7 @@ defmodule OrderMenuWeb.OrderMenuLive do
           <li class="border-b border-[#F5F3F0] py-4">
             <h1 class="font-bold mb-2"><%= order["name"] %></h1>
             <div class="flex">
-            <p class="text-[#c73a0f]"><%= order["count"] %>x</p>
+            <p class="text-[#c73a0f] font-bold"><%= order["count"] %>x</p>
              <span class="text-[#ABA19D] ml-5 mr-2"><span class="text-sm">@</span> $<%= order["price"]%></span>
             <span class="text-[#8C7E7E]">$<%= order["count"] * order["price"] %></span>
             </div>
