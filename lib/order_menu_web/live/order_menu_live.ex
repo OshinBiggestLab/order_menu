@@ -65,7 +65,7 @@ defmodule OrderMenuWeb.OrderMenuLive do
         <button class="border w-5 h-5 flex justify-center items-center rounded-full" phx-click="increment"  phx-value-index={index}>+</button>
         </div>
         <%else%>
-        <button class="absolute mt-[120px] font-bold bg-white border border-[#9F9392] border-1 rounded-full w-full max-w-[160px] h-11 hover:text-[#c73a0f] hover:border-[#c73a0f]"  phx-click="handle_is_clicked">Add to Cart</button>
+        <button class="absolute mt-[120px] font-bold bg-white border border-[#9F9392] border-1 rounded-full w-full max-w-[160px] h-11 hover:text-[#c73a0f] hover:border-[#c73a0f] hover:bg-[hsl(20, 50%, 98%)]"  phx-click="handle_is_clicked">Add to Cart</button>
         <% end %>
         <div class="my-10 flex flex-col gap-y-1 w-full">
         <span class="text-[#9C9591] text-md"><%= item["category"]%></span>
@@ -83,12 +83,12 @@ defmodule OrderMenuWeb.OrderMenuLive do
           <%= if length(orders) > 0 do %>
           <ul >
          <%= for order <- orders do%>
-          <li class="border-b py-4">
-            <h1 class="font-bold"><%= order["name"] %></h1>
+          <li class="border-b border-[#F5F3F0] py-4">
+            <h1 class="font-bold mb-2"><%= order["name"] %></h1>
             <div class="flex">
             <p class="text-[#c73a0f]"><%= order["count"] %>x</p>
-             <span>@ $<%= order["price"]%></span>
-            <span>$<%= order["count"] * order["price"] %></span>
+             <span class="text-[#ABA19D] ml-5 mr-2"><span class="text-sm">@</span> $<%= order["price"]%></span>
+            <span class="text-[#8C7E7E]">$<%= order["count"] * order["price"] %></span>
             </div>
            </li>
          <% end %>
@@ -99,39 +99,39 @@ defmodule OrderMenuWeb.OrderMenuLive do
           <span class="font-bold text-2xl">$<%= total_price %></span>
           </div>
         </div>
-        <div class="bg-[#FBF8F6] rounded-lg h-[50px] mb-6 flex items-center justify-center"><p>This is a <b> carbon-neutral</b> delivery</p></div>
+        <div class="bg-[#FBF8F6] fef7f4 rounded-lg h-[50px] mb-6 flex items-center justify-center"><p>This is a <b> carbon-neutral</b> delivery</p></div>
            <button class="bg-[#c73a0f] text-white w-full h-[50px] rounded-full hover:bg-[#8A341A]" phx-click="confirm_order">Confirm Order</button>
         </section>
         <%!-- ORDER CONFIRMED ⬇️ --%>
         <%= if @confirm_btn do %>
-        <section class="absolute overflow-hidden top-0 left-0 bg-[hsla(13,1%,14%,0.5)] flex items-center justify-center w-screen h-screen">
+        <section class="absolute overflow-hidden top-0 left-0 bg-[hsla(0,0%,10%,0.6)] flex items-center justify-center w-screen h-screen">
         <div class="bg-white max-w-[592px] w-full p-10 rounded-xl">
         <h1 class="text-5xl font-bold mb-4">Order Confirmed</h1>
         <p class="text-[#6e5c56] text-lg">We hope you enjoy your food!</p>
         <div>
         <ul class="my-10 px-6 pb-6 pt-3 rounded-md bg-[#FBF8F6] ">
         <%= for order <- orders do%>
-        <li class="flex items-center justify-between border-b border-[hsl(13, 31%, 94%)] py-4">
+        <li class="flex items-center justify-between border-b border-[hsl(13, 31%, 94%)] pt-4 pb-8">
         <div class="flex gap-x-4">
         <img class="w-14 h-14 rounded-md" src={"#{order["image"]["desktop"]}"} alt={order["name"]}/>
         <div class="flex flex-col">
-          <p class="font-bold"><%= order["name"]%></p>
+          <p class="font-bold mb-2"><%= order["name"]%></p>
           <div>
            <span class="text-[#c73a0f]"><%= order["count"]%>x</span>
-           <span>@ $<%= order["price"]%></span>
+           <span class="text-[#ABA19D] ml-4"><span class="text-sm">@</span>  $<%= order["price"]%></span>
            </div>
         </div>
         </div>
         <span class="">$<%= order["count"] * order["price"] %></span>
         </li>
         <% end %>
-        <div class="mt-5 flex justify-between">
+        <div class="mt-8 flex justify-between">
           <span>Order Total</span>
           <span class="font-bold text-2xl">$<%= total_price %></span>
         </div>
         </ul>
           </div>
-        <button class="bg-[#c73a0f] hover:bg-[#8A341A]" phx-click="confirm_order">Start New Order</button>
+        <button class="w-full h-[54px] text-white rounded-full bg-[#c73a0f] hover:bg-[#8A341A]" phx-click="confirm_order">Start New Order</button>
         </div>
         </section>
         <%end%>
