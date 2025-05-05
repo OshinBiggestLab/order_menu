@@ -48,19 +48,17 @@ defmodule OrderMenuWeb.OrderMenuLive do
 
     def render(assigns) do
       ~H"""
-
       <% orders = Enum.filter(@menu_items, fn item -> item["count"] > 0 end) %>
-      <%= inspect(Enum.filter(@menu_items, fn item -> item["count"] > 0 end)) %>
+      <%!-- <%= inspect(Enum.filter(@menu_items, fn item -> item["count"] > 0 end)) %> --%>
       <% total_price = Enum.reduce(orders, 0, fn item, acc -> acc + item["count"] * item["price"] end) %>
-
-        <main class="bg-[#FBF8F6] grid grid-cols-2 gap-8 py-[72px] px-[92px]">
+        <main class="bg-[#FBF8F6] flex gap-8 py-[86px] px-[114px]">
         <%!-- MENU LIST ⬇️ --%>
         <section  class="">
-        <h1 class="font-bold mb-10">Desserts</h1>
-        <ul class="grid grid-cols-3 gap-x-4">
+        <h1 class="font-bold mb-10 text-5xl">Desserts</h1>
+        <ul class="grid grid-cols-3 gap-x-4 w-[980px]">
         <%= for {item, index} <- Enum.with_index(@menu_items) do %>
-        <li class=" flex flex-col">
-        <img class="w-[200px] h-[200px] rounded-md" src={"#{item["image"]["desktop"]}"} alt={item["name"]} />
+        <li class="flex flex-col">
+        <img class="w-[300px] h-[300px] rounded-md" src={"#{item["image"]["desktop"]}"} alt={item["name"]} />
         <%= if @is_clicked do%>
         <div class=" bg-[#c73a0f] px-6 text-white flex justify-between items-center border border-2 rounded-full max-w-[150px] py-1" phx-click="handle_is_clicked">
         <button class="border w-5 h-5 flex justify-center items-center rounded-full" phx-click="decrement"  phx-value-index={index}>-</button>
@@ -78,34 +76,42 @@ defmodule OrderMenuWeb.OrderMenuLive do
         </ul>
         </section>
         <%!-- CART ⬇️ --%>
-        <section  class="bg-white rounded-lg max-w-[600px] max-h-[400px]">
+        <section class="bg-white rounded-lg p-6 max-w-[600px] h-fit w-full">
        <div>
-          <h1 class="text-[#c73a0f] font-bold">Your Cart <span>(<%= length(orders)%>)</span></h1>
+          <h1 class="text-[#c73a0f] font-bold text-3xl mb-6">Your Cart <span>(<%= length(orders)%>)</span></h1>
           <%= if length(orders) > 0 do %>
           <ul >
          <%= for order <- orders do%>
-         <h1><%= order["name"] %></h1>
-         <p><%= order["count"] %>X</p>
-         <span>@ $<%= order["price"]%></span>
-         <span>$<%= order["count"] * order["price"] %></span>
-
+          <li class="border-b py-4">
+            <h1 class="font-bold"><%= order["name"] %></h1>
+            <div class="flex">
+            <p class="text-[#c73a0f]"><%= order["count"] %>X</p>
+             <span>@ $<%= order["price"]%></span>
+            <span>$<%= order["count"] * order["price"] %></span>
+            </div>
+           </li>
          <% end %>
           </ul>
           <%end%>
-          <div><span>Order Total</span><span class="font-bold">$<%= total_price %></span></div>
+          <div class="my-10 flex justify-between">
+          <span class="text-slate-600">Order Total</span>
+          <span class="font-bold text-2xl">$<%= total_price %></span>
+          </div>
         </div>
-           <button class="bg-[#c73a0f] text-white" phx-click="confirm_order">Confirm Order</button>
+        <div class="bg-[#FBF8F6] rounded-lg h-[50px] mb-6 flex items-center justify-center"><p>This is a <b> carbon-neutral</b> delivery</p></div>
+           <button class="bg-[#c73a0f] text-white w-full h-[50px] rounded-full hover:bg-[#8A341A]" phx-click="confirm_order">Confirm Order</button>
         </section>
         <%!-- ORDER CONFIRMED ⬇️ --%>
         <%= if @confirm_btn do %>
-        <section  class="bg-white">
-        <h1>Order Confirmed</h1>
-        <p>We hope you enjoy your food!</p>
-        <ul>
+        <section class="absolute overflow-hidden top-0 left-0 bg-[hsla(13,1%,14%,0.5)] flex items-center justify-center w-screen h-screen">
+        <div class="bg-white p-10 rounded-xl">
+        <h1 class="text-5xl font-bold">Order Confirmed</h1>
+        <p class="text-[hsl(14, 24.50%, 72.00%)]">We hope you enjoy your food!</p>
+        <ul class="my-10">
         <%= for order <- orders do%>
-        <img src={"#{order["image"]["desktop"]}"} alt={order["name"]}/>
-        <div>
-          <p>order["name"]</p>
+        <img class="w-14 h-14 rounded-md" src={"#{order["image"]["desktop"]}"} alt={order["name"]}/>
+        <div class="flex">
+          <p><%= order["name"]%></p>
           <div>
            <span><%= order["count"]%>X</span>
            <span>@ $<%= order["price"]%></span>
@@ -120,6 +126,7 @@ defmodule OrderMenuWeb.OrderMenuLive do
           <span>$<%= total_price %></span>
         </div>
         <button phx-click="confirm_order">Start New Order</button>
+        </div>
         </section>
         <%end%>
       </main>
