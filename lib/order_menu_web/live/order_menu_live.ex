@@ -82,9 +82,9 @@ defmodule OrderMenuWeb.OrderMenuLive do
       ~H"""
       <% orders = Enum.filter(@menu_items, fn item -> item["count"] > 0 end) %>
 
-        <main class="font-redhat bg-[#FBF8F6] flex gap-8 py-[86px] px-[114px]">
-        <%!-- MENU LIST ⬇️ --%>
-        <section  class="">
+        <main class={"w-full font-redhat bg-[#FBF8F6] flex gap-8 py-[86px] px-[114px]" <> if @confirm_btn, do: " fixed", else: "" } >
+         <%!-- MENU LIST ⬇️ --%>
+         <section  class="">
         <h1 class="font-bold mb-10 text-5xl">Desserts</h1>
         <ul class="grid grid-cols-3 gap-x-4 w-[980px]">
         <%= for {item, index} <- Enum.with_index(@menu_items) do %>
@@ -151,7 +151,7 @@ defmodule OrderMenuWeb.OrderMenuLive do
         </section>
         <%!-- ORDER CONFIRMED ⬇️ --%>
         <%= if @confirm_btn do %>
-        <section class="absolute overflow-hidden top-0 left-0 bg-[hsla(0,0%,10%,0.6)] flex items-center justify-center w-screen h-screen">
+        <section class="fixed overflow-hidden inset-0 bg-[hsla(0,0%,10%,0.6)] flex items-center justify-center w-screen h-screen">
         <div class="bg-white max-w-[592px] w-full p-10 rounded-xl">
         <h1 class="text-5xl font-bold mb-4">Order Confirmed</h1>
         <p class="text-[#6e5c56] text-lg">We hope you enjoy your food!</p>
