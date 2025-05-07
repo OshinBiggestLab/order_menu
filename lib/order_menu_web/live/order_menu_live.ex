@@ -8,16 +8,27 @@ defmodule OrderMenuWeb.OrderMenuLive do
         "priv/static/data.json"
         |> File.read!()
         |> Jason.decode!()
-        |> Enum.map(fn item -> Map.put(item, "count", 0) end)
+        |> Enum.map(fn item ->
+          item
+          |> Map.put( "count", 0)
+          |> Map.put("is_clicked", false)
+        end)
         # IO.puts("DearJSON: #{inspect(menu_items)}")
-      {:ok, assign(socket, menu_items: menu_items, is_clicked: false, count_order: 0, confirm_btn: false, total_price: 0)}
+      {:ok, assign(socket, menu_items: menu_items, count_order: 0, confirm_btn: false, total_price: 0)}
     end
 
     @spec handle_event(<<_::136>>, any(), any()) :: {:noreply, any()}
 
-    def handle_event("handle_is_clicked", _unsigned_params, socket) do
-      update_is_clicked = !socket.assigns.is_clicked
-      {:noreply, assign(socket, is_clicked: update_is_clicked)}
+    def handle_event("handle_is_clicked",  %{"name" => name}, socket) do
+      updated_menu_items = Enum.map(socket.assigns.menu_items, fn item ->
+        if item["name"] == name do
+          Map.put(item, "is_clicked", true)
+        else
+          item
+        end
+      end)
+
+      {:noreply, assign(socket, menu_items: updated_menu_items)}
     end
 
     def handle_event("increment", %{"index" => index_str}, socket) do
@@ -70,8 +81,6 @@ defmodule OrderMenuWeb.OrderMenuLive do
     def render(assigns) do
       ~H"""
       <% orders = Enum.filter(@menu_items, fn item -> item["count"] > 0 end) %>
-      <%!-- <%= inspect(Enum.filter(@menu_items, fn item -> item["count"] > 0 end)) %> --%>
-      <%!-- <% total_price = Enum.reduce(orders, 0, fn item, acc -> acc + item["count"] * item["price"] end) %> --%>
 
         <main class="font-redhat bg-[#FBF8F6] flex gap-8 py-[86px] px-[114px]">
         <%!-- MENU LIST ⬇️ --%>
@@ -82,14 +91,14 @@ defmodule OrderMenuWeb.OrderMenuLive do
         <li class="flex flex-col justify-center items-center w-fit">
         <img class={"relative max-w-[300px] max-h-[300px] rounded-xl" <> if item["count"] > 0, do: " border-[4px] border-red-600", else: ""} src={"#{item["image"]["desktop"]}"} alt={item["name"]} />
 
-        <%= if @is_clicked do%>
+        <%= if item["is_clicked"] do%>
         <div class="absolute mt-[120px] bg-[#c73a0f] px-6 text-white flex justify-between items-center rounded-full w-full max-w-[160px] h-11" phx-click="handle_is_clicked">
         <button class="border w-5 h-5 flex justify-center items-center rounded-full" phx-click="decrement"  phx-value-index={index}>-</button>
         <%= item["count"] %>
         <button class="border w-5 h-5 flex justify-center items-center rounded-full" phx-click="increment"  phx-value-index={index}>+</button>
         </div>
         <%else%>
-        <button class="absolute mt-[120px] font-semibold bg-white border border-[#9F9392] border-1 rounded-full w-full max-w-[160px] h-11 hover:text-[#c73a0f] hover:border-[#c73a0f] hover:bg-[hsl(20, 50%, 98%)]"  phx-click="handle_is_clicked">Add to Cart</button>
+        <button class="absolute mt-[120px] font-semibold bg-white border border-[#9F9392] border-1 rounded-full w-full max-w-[160px] h-11 hover:text-[#c73a0f] hover:border-[#c73a0f] hover:bg-[hsl(20, 50%, 98%)]"  phx-click="handle_is_clicked" phx-value-name={item["name"]}>Add to Cart</button>
         <% end %>
         <div class="my-10 flex flex-col gap-y-1 w-full">
         <span class="text-[#9C9591] text-md"><%= item["category"]%></span>
