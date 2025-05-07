@@ -49,11 +49,27 @@ defmodule OrderMenuWeb.OrderMenuLive do
       {:noreply, assign(socket, confirm_btn: !socket.assigns.confirm_btn)}
     end
 
+    def handle_event("cancel_item", %{"name" => name}, socket) do
+      updated_items =
+        Enum.map(socket.assigns.menu_items, fn item ->
+          if item["name"] == name do
+            Map.put(item, "count", 0)
+          else
+            item
+          end
+        end)
+
+      total_price =
+        Enum.reduce(updated_items, 0, fn item, acc ->
+          acc + item["count"] * item["price"]
+        end)
+
+      {:noreply, assign(socket, menu_items: updated_items, total_price: total_price)}
+    end
+
     def render(assigns) do
       ~H"""
       <% orders = Enum.filter(@menu_items, fn item -> item["count"] > 0 end) %>
-      <%!-- <%= inspect(Enum.filter(@menu_items, fn item -> item["count"] > 0 end)) %> --%>
-      <%!-- <% total_price = Enum.reduce(orders, 0, fn item, acc -> acc + item["count"] * item["price"] end) %> --%>
 
         <main class="font-redhat bg-[#FBF8F6] flex gap-8 py-[86px] px-[114px]">
         <%!-- MENU LIST ⬇️ --%>
@@ -89,7 +105,8 @@ defmodule OrderMenuWeb.OrderMenuLive do
           <%= if length(orders) > 0 do %>
           <ul >
          <%= for order <- orders do%>
-          <li class="border-b border-[#F5F3F0] py-4">
+          <li class="border-b border-[#F5F3F0] py-4 flex justify-between">
+          <div>
             <h1 class="font-bold mb-2"><%= order["name"] %></h1>
             <div class="flex">
             <p class="text-[#c73a0f] font-bold"><%= order["count"] %>x</p>
@@ -103,6 +120,8 @@ defmodule OrderMenuWeb.OrderMenuLive do
               %>
               </span>
             </div>
+            </div>
+            <button class="font-semibold" phx-click="cancel_item" phx-value-name={order["name"]}>Cancel</button>
            </li>
          <% end %>
           </ul>
