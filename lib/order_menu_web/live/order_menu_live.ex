@@ -70,6 +70,8 @@ defmodule OrderMenuWeb.OrderMenuLive do
     def render(assigns) do
       ~H"""
       <% orders = Enum.filter(@menu_items, fn item -> item["count"] > 0 end) %>
+      <%!-- <%= inspect(Enum.filter(@menu_items, fn item -> item["count"] > 0 end)) %> --%>
+      <%!-- <% total_price = Enum.reduce(orders, 0, fn item, acc -> acc + item["count"] * item["price"] end) %> --%>
 
         <main class="font-redhat bg-[#FBF8F6] flex gap-8 py-[86px] px-[114px]">
         <%!-- MENU LIST ⬇️ --%>
@@ -78,7 +80,8 @@ defmodule OrderMenuWeb.OrderMenuLive do
         <ul class="grid grid-cols-3 gap-x-4 w-[980px]">
         <%= for {item, index} <- Enum.with_index(@menu_items) do %>
         <li class="flex flex-col justify-center items-center w-fit">
-        <img class="relative max-w-[300px] max-h-[300px] rounded-md" src={"#{item["image"]["desktop"]}"} alt={item["name"]} />
+        <img class={"relative max-w-[300px] max-h-[300px] rounded-xl" <> if item["count"] > 0, do: " border-[4px] border-red-600", else: ""} src={"#{item["image"]["desktop"]}"} alt={item["name"]} />
+
         <%= if @is_clicked do%>
         <div class="absolute mt-[120px] bg-[#c73a0f] px-6 text-white flex justify-between items-center rounded-full w-full max-w-[160px] h-11" phx-click="handle_is_clicked">
         <button class="border w-5 h-5 flex justify-center items-center rounded-full" phx-click="decrement"  phx-value-index={index}>-</button>
@@ -99,7 +102,7 @@ defmodule OrderMenuWeb.OrderMenuLive do
         </ul>
         </section>
         <%!-- CART ⬇️ --%>
-        <section class="bg-white rounded-lg p-6 max-w-[600px] h-fit w-full">
+        <section class="bg-white rounded-2xl p-8 max-w-[600px] h-fit w-full">
        <div>
           <h1 class="text-[#c73a0f] font-bold text-3xl mb-6">Your Cart <span>(<%= length(orders)%>)</span></h1>
           <%= if length(orders) > 0 do %>
@@ -125,15 +128,17 @@ defmodule OrderMenuWeb.OrderMenuLive do
            </li>
          <% end %>
           </ul>
-          <%end%>
           <div class="my-10 flex justify-between">
-          <span class="text-slate-600">Order Total</span>
-          <span class="font-bold text-2xl">$<%= :erlang.float_to_binary(Float.parse(@total_price |> to_string) |> elem(0), decimals: 2) %>
-          </span>
-          </div>
+            <span class="text-slate-600">Order Total</span>
+            <span class="font-bold text-2xl">$<%= :erlang.float_to_binary(Float.parse(@total_price |> to_string) |> elem(0), decimals: 2) %>
+            </span>
+            </div>
+            <div class="bg-[#FBF8F6] fef7f4 rounded-lg h-[50px] mb-6 flex items-center justify-center"><p>This is a <b> carbon-neutral</b> delivery</p></div>
+            <button class="bg-[#c73a0f] text-white w-full h-[50px] rounded-full hover:bg-[#8A341A]" phx-click="confirm_order">Confirm Order</button>
+            <% else %>
+            <p class="text-center text-[#765b52] text-lg font-semibold mb-4 mt-10">Your added items will appear here</p>
+          <%end%>
         </div>
-        <div class="bg-[#FBF8F6] fef7f4 rounded-lg h-[50px] mb-6 flex items-center justify-center"><p>This is a <b> carbon-neutral</b> delivery</p></div>
-           <button class="bg-[#c73a0f] text-white w-full h-[50px] rounded-full hover:bg-[#8A341A]" phx-click="confirm_order">Confirm Order</button>
         </section>
         <%!-- ORDER CONFIRMED ⬇️ --%>
         <%= if @confirm_btn do %>
@@ -157,9 +162,9 @@ defmodule OrderMenuWeb.OrderMenuLive do
         </div>
         <span class="font-semibold">$
         <%=
-                  count = Float.parse(order["count"] |> to_string) |> elem(0)
-                  price = Float.parse(order["price"] |> to_string) |> elem(0)
-                  :erlang.float_to_binary(count * price, decimals: 2)
+           count = Float.parse(order["count"] |> to_string) |> elem(0)
+           price = Float.parse(order["price"] |> to_string) |> elem(0)
+           :erlang.float_to_binary(count * price, decimals: 2)
         %>
         </span>
         </li>
