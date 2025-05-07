@@ -27,18 +27,22 @@ defmodule OrderMenuWeb.OrderMenuLive do
         Map.update!(item, "count", &(&1 + 1))
       end)
 
-      {:noreply, assign(socket, :menu_items, updated_items)}
+      total_price = Enum.reduce(updated_items, 0, fn item, acc -> acc + item["count"] * item["price"] end)
+
+      {:noreply, assign(socket, menu_items: updated_items, total_price: total_price)}
       # {:noreply, update(socket, :count_order, &(&1 + 1))}
     end
 
     def handle_event("decrement", %{"index" => index_str}, socket) do
       index = String.to_integer(index_str)
 
-      update_items = List.update_at(socket.assigns.menu_items, index, fn item ->
+      updated_items = List.update_at(socket.assigns.menu_items, index, fn item ->
         Map.update!(item, "count",  &max(&1 - 1, 0))
       end)
 
-      {:noreply, assign(socket, :menu_items, update_items)}
+      total_price = Enum.reduce(updated_items, 0, fn item, acc -> acc + item["count"] * item["price"] end)
+
+      {:noreply, assign(socket, menu_items: updated_items, total_price: total_price)}
     end
 
     def handle_event("confirm_order", _params, socket) do
@@ -49,7 +53,8 @@ defmodule OrderMenuWeb.OrderMenuLive do
       ~H"""
       <% orders = Enum.filter(@menu_items, fn item -> item["count"] > 0 end) %>
       <%!-- <%= inspect(Enum.filter(@menu_items, fn item -> item["count"] > 0 end)) %> --%>
-      <% total_price = Enum.reduce(orders, 0, fn item, acc -> acc + item["count"] * item["price"] end) %>
+      <%!-- <% total_price = Enum.reduce(orders, 0, fn item, acc -> acc + item["count"] * item["price"] end) %> --%>
+
         <main class="font-redhat bg-[#FBF8F6] flex gap-8 py-[86px] px-[114px]">
         <%!-- MENU LIST ⬇️ --%>
         <section  class="">
@@ -70,7 +75,8 @@ defmodule OrderMenuWeb.OrderMenuLive do
         <div class="my-10 flex flex-col gap-y-1 w-full">
         <span class="text-[#9C9591] text-md"><%= item["category"]%></span>
         <p class="text-xl"><%= item["name"]%></p>
-        <span class="text-[#c73a0f] text-xl">$<%= item["price"] %></span>
+        <span class="text-[#c73a0f] text-xl">$<%= :erlang.float_to_binary(Float.parse(item["price"] |> to_string) |> elem(0), decimals: 2) %>
+        </span>
         </div>
         </li>
         <% end %>
@@ -87,8 +93,15 @@ defmodule OrderMenuWeb.OrderMenuLive do
             <h1 class="font-bold mb-2"><%= order["name"] %></h1>
             <div class="flex">
             <p class="text-[#c73a0f] font-bold"><%= order["count"] %>x</p>
-             <span class="text-[#ABA19D] ml-5 mr-2"><span class="text-sm">@</span> $<%= order["price"]%></span>
-            <span class="text-[#8C7E7E]">$<%= order["count"] * order["price"] %></span>
+             <span class="text-[#ABA19D] ml-5 mr-2"><span class="text-sm">@</span> $<%= :erlang.float_to_binary(Float.parse(order["price"] |> to_string) |> elem(0), decimals: 2) %>
+             </span>
+            <span class="text-[#8C7E7E]">
+            $<%=
+                  count = Float.parse(order["count"] |> to_string) |> elem(0)
+                  price = Float.parse(order["price"] |> to_string) |> elem(0)
+                  :erlang.float_to_binary(count * price, decimals: 2)
+              %>
+              </span>
             </div>
            </li>
          <% end %>
@@ -96,7 +109,8 @@ defmodule OrderMenuWeb.OrderMenuLive do
           <%end%>
           <div class="my-10 flex justify-between">
           <span class="text-slate-600">Order Total</span>
-          <span class="font-bold text-2xl">$<%= total_price %></span>
+          <span class="font-bold text-2xl">$<%= :erlang.float_to_binary(Float.parse(@total_price |> to_string) |> elem(0), decimals: 2) %>
+          </span>
           </div>
         </div>
         <div class="bg-[#FBF8F6] fef7f4 rounded-lg h-[50px] mb-6 flex items-center justify-center"><p>This is a <b> carbon-neutral</b> delivery</p></div>
@@ -118,16 +132,22 @@ defmodule OrderMenuWeb.OrderMenuLive do
           <p class="font-bold mb-2"><%= order["name"]%></p>
           <div>
            <span class="text-[#c73a0f]"><%= order["count"]%>x</span>
-           <span class="text-[#ABA19D] ml-4"><span class="text-sm">@</span>  $<%= order["price"]%></span>
+           <span class="text-[#ABA19D] ml-4"><span class="text-sm">@</span> $<%= :erlang.float_to_binary(Float.parse(order["price"] |> to_string) |> elem(0), decimals: 2) %></span>
            </div>
         </div>
         </div>
-        <span class="">$<%= order["count"] * order["price"] %></span>
+        <span class="font-semibold">$
+        <%=
+                  count = Float.parse(order["count"] |> to_string) |> elem(0)
+                  price = Float.parse(order["price"] |> to_string) |> elem(0)
+                  :erlang.float_to_binary(count * price, decimals: 2)
+        %>
+        </span>
         </li>
         <% end %>
         <div class="mt-8 flex justify-between">
           <span>Order Total</span>
-          <span class="font-bold text-2xl">$<%= total_price %></span>
+          <span class="font-bold text-2xl">$<%= :erlang.float_to_binary(Float.parse(@total_price |> to_string) |> elem(0), decimals: 2) %></span>
         </div>
         </ul>
           </div>
