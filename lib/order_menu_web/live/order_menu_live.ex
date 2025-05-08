@@ -44,11 +44,22 @@ defmodule OrderMenuWeb.OrderMenuLive do
       # {:noreply, update(socket, :count_order, &(&1 + 1))}
     end
 
+
+
+
+
+
     def handle_event("decrement", %{"index" => index_str}, socket) do
       index = String.to_integer(index_str)
 
       updated_items = List.update_at(socket.assigns.menu_items, index, fn item ->
-        Map.update!(item, "count",  &max(&1 - 1, 0))
+          if  item["is_clicked"] && item["count"] == 1 do
+            item
+              |>  Map.update!("count",  &max(&1 - 1, 0))
+              |>  Map.put("is_clicked", false)
+          else
+            Map.update!(item, "count",  &max(&1 - 1, 0))
+          end
       end)
 
       total_price = Enum.reduce(updated_items, 0, fn item, acc -> acc + item["count"] * item["price"] end)
@@ -92,7 +103,7 @@ defmodule OrderMenuWeb.OrderMenuLive do
         <img class={"relative max-w-[300px] max-h-[300px] rounded-xl" <> if item["count"] > 0, do: " border-[4px] border-red-600", else: ""} src={"#{item["image"]["desktop"]}"} alt={item["name"]} />
 
         <%= if item["is_clicked"] do%>
-        <div class="absolute mt-[120px] bg-[#c73a0f] px-6 text-white flex justify-between items-center rounded-full w-full max-w-[160px] h-11" phx-click="handle_is_clicked">
+        <div class="absolute mt-[120px] bg-[#c73a0f] px-6 text-white flex justify-between items-center rounded-full w-full max-w-[160px] h-11" >
         <button class="border w-5 h-5 flex justify-center items-center rounded-full" phx-click="decrement"  phx-value-index={index}>-</button>
         <%= item["count"] %>
         <button class="border w-5 h-5 flex justify-center items-center rounded-full" phx-click="increment"  phx-value-index={index}>+</button>
