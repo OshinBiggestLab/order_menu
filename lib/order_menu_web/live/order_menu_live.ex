@@ -46,9 +46,6 @@ defmodule OrderMenuWeb.OrderMenuLive do
 
 
 
-
-
-
     def handle_event("decrement", %{"index" => index_str}, socket) do
       index = String.to_integer(index_str)
 
@@ -93,15 +90,14 @@ defmodule OrderMenuWeb.OrderMenuLive do
       ~H"""
       <% orders = Enum.filter(@menu_items, fn item -> item["count"] > 0 end) %>
 
-        <main class={"w-full font-redhat bg-[#FBF8F6] flex gap-8 py-[86px] px-[114px]" <> if @confirm_btn, do: " fixed", else: "" } >
+        <main class={"w-full font-redhat bg-[#FBF8F6] flex gap-8 py-[86px] px-10 items-center justify-center mobile:flex-col laptop:flex-row" <> if @confirm_btn, do: " fixed", else: "" } >
          <%!-- MENU LIST ⬇️ --%>
          <section  class="">
         <h1 class="font-bold mb-10 text-5xl">Desserts</h1>
-        <ul class="grid grid-cols-3 gap-x-4 w-[980px]">
+        <ul class="grid screen1024:gap-x-4 screen1024:grid-cols-2 laptop:grid-cols-3 laptop:min-w-[980px]">
         <%= for {item, index} <- Enum.with_index(@menu_items) do %>
         <li class="flex flex-col justify-center items-center w-fit">
         <img class={"relative max-w-[300px] max-h-[300px] rounded-xl" <> if item["count"] > 0, do: " border-[4px] border-red-600", else: ""} src={"#{item["image"]["desktop"]}"} alt={item["name"]} />
-
         <%= if item["is_clicked"] do%>
         <div class="absolute mt-[120px] bg-[#c73a0f] px-6 text-white flex justify-between items-center rounded-full w-full max-w-[160px] h-11" >
         <button class="border w-5 h-5 flex justify-center items-center rounded-full" phx-click="decrement"  phx-value-index={index}>-</button>
@@ -122,7 +118,7 @@ defmodule OrderMenuWeb.OrderMenuLive do
         </ul>
         </section>
         <%!-- CART ⬇️ --%>
-        <section class="bg-white rounded-2xl p-8 max-w-[600px] h-fit w-full">
+        <section class="bg-white rounded-2xl p-8 max-w-[600px] h-fit w-full laptop:self-start">
        <div>
           <h1 class="text-[#c73a0f] font-bold text-3xl mb-6">Your Cart <span>(<%= length(orders)%>)</span></h1>
           <%= if length(orders) > 0 do %>
