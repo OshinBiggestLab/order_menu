@@ -12,6 +12,11 @@ module.exports = {
     "../lib/order_menu_web/**/*.*ex",
   ],
   theme: {
+    screens: {
+      mobile: "0px",
+      screen1024: "1024px",
+      laptop: "1440px",
+    },
     extend: {
       colors: {
         brand: "#FD4F00",
