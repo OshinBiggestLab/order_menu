@@ -44,8 +44,6 @@ defmodule OrderMenuWeb.OrderMenuLive do
       # {:noreply, update(socket, :count_order, &(&1 + 1))}
     end
 
-
-
     def handle_event("decrement", %{"index" => index_str}, socket) do
       index = String.to_integer(index_str)
 
