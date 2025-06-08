@@ -21,14 +21,10 @@ import "phoenix_html";
 import { Socket } from "phoenix";
 import { LiveSocket } from "phoenix_live_view";
 import topbar from "../vendor/topbar";
+import OrderMenuHook from "./hooks/order_menu_hook.js";
 
-let Hooks = {};
-
-Hooks.OrderMenu = {
-  mounted() {
-    const decrementBtn = this.el.querySelector("decrement");
-    const incrementBtn = this.el.querySelector("increment");
-  },
+let Hooks = {
+  OrderMenu: OrderMenuHook,
 };
 
 let csrfToken = document

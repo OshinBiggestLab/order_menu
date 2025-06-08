@@ -84,11 +84,13 @@ defmodule OrderMenuWeb.OrderMenuLive do
       {:noreply, assign(socket, menu_items: updated_items, total_price: total_price)}
     end
 
+
+    @spec render(any()) :: Phoenix.LiveView.Rendered.t()
     def render(assigns) do
       ~H"""
       <%!-- <div id="order" phx-hook="OrderMenu"> --%>
       <% orders = Enum.filter(@menu_items, fn item -> item["count"] > 0 end) %>
-        <main id="order" phx-hook="OrderMenu" class={"w-full font-redhat bg-[#FBF8F6] flex gap-8 py-[86px] px-10 items-center justify-center mobile:flex-col laptop:flex-row" <> if @confirm_btn, do: " fixed", else: "" } >
+        <main id="order" phx-hook="OrderMenu" data-items={Jason.encode!(orders)} class={"w-full font-redhat bg-[#FBF8F6] flex gap-8 py-[86px] px-10 items-center justify-center mobile:flex-col laptop:flex-row" <> if @confirm_btn, do: " fixed", else: "" } >
          <%!-- MENU LIST ⬇️ --%>
         <section class="">
         <h1 class="font-bold mb-10 text-5xl">Desserts</h1>
@@ -98,7 +100,8 @@ defmodule OrderMenuWeb.OrderMenuLive do
         <img class={"relative max-w-[300px] max-h-[300px] rounded-xl" <> if item["count"] > 0, do: " border-[4px] border-red-600", else: ""} src={"#{item["image"]["desktop"]}"} alt={item["name"]} />
         <%= if item["is_clicked"] do%>
         <div class="absolute mt-[120px] bg-[#c73a0f] px-6 text-white flex justify-between items-center rounded-full w-full max-w-[160px] h-11" >
-        <button id="decrement" class="border w-5 h-5 flex justify-center items-center rounded-full" phx-click="decrement"  phx-value-index={index}>-</button>
+        <%!-- 🟢 ON PROGRESS ⬇️ --%>
+        <button class="selected" data-menu={item["name"]} class="border w-5 h-5 flex justify-center items-center rounded-full" phx-click="decrement"  phx-value-index={index}>-</button>
         <%= item["count"] %>
         <button id="increment" class="border w-5 h-5 flex justify-center items-center rounded-full" phx-click="increment"  phx-value-index={index}>+</button>
         </div>
@@ -189,7 +192,7 @@ defmodule OrderMenuWeb.OrderMenuLive do
         </div>
         </ul>
           </div>
-        <button class="w-full h-[54px] text-white rounded-full bg-[#c73a0f] hover:bg-[#8A341A]" phx-click="confirm_order">Start New Order</button>
+        <button id="start_new_order" class="w-full h-[54px] text-white rounded-full bg-[#c73a0f] hover:bg-[#8A341A]" phx-click="confirm_order">Start New Order</button>
         </div>
         </section>
         <%end%>
