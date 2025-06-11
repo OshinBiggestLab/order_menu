@@ -84,13 +84,19 @@ defmodule OrderMenuWeb.OrderMenuLive do
       {:noreply, assign(socket, menu_items: updated_items, total_price: total_price)}
     end
 
+    def handle_event("reset_order", _params, socket) do
+      dbg("yay")
+
+      {:noreply, socket}
+    end
+
 
     @spec render(any()) :: Phoenix.LiveView.Rendered.t()
     def render(assigns) do
       ~H"""
       <%!-- <div id="order" phx-hook="OrderMenu"> --%>
       <% orders = Enum.filter(@menu_items, fn item -> item["count"] > 0 end) %>
-        <main id="order" phx-hook="OrderMenu" data-items={Jason.encode!(orders)} class={"w-full font-redhat bg-[#FBF8F6] flex gap-8 py-[86px] px-10 items-center justify-center mobile:flex-col laptop:flex-row" <> if @confirm_btn, do: " fixed", else: "" } >
+        <main id="order" data-items={Jason.encode!(orders)} class={"w-full font-redhat bg-[#FBF8F6] flex gap-8 py-[86px] px-10 items-center justify-center mobile:flex-col laptop:flex-row" <> if @confirm_btn, do: " fixed", else: "" } >
          <%!-- MENU LIST ⬇️ --%>
         <section class="">
         <h1 class="font-bold mb-10 text-5xl">Desserts</h1>
@@ -159,7 +165,7 @@ defmodule OrderMenuWeb.OrderMenuLive do
         </section>
         <%!-- ORDER CONFIRMED ⬇️ --%>
         <%= if @confirm_btn do %>
-        <section class="fixed overflow-hidden inset-0 bg-[hsla(0,0%,10%,0.6)] flex items-center justify-center w-screen h-screen">
+        <section phx-hook="OrderMenu" id="test" class="fixed overflow-hidden inset-0 bg-[hsla(0,0%,10%,0.6)] flex items-center justify-center w-screen h-screen">
         <div class="bg-white max-w-[592px] w-full p-10 rounded-xl">
         <h1 class="text-5xl font-bold mb-4">Order Confirmed</h1>
         <p class="text-[#6e5c56] text-lg">We hope you enjoy your food!</p>
